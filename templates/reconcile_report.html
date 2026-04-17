@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reconciliation Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>Reconciliation Report</h2>
+
+<table border="1">
+    <tr>
+        <th>Date</th>
+        <th>Expected</th>
+        <th>Actual</th>
+        <th>Variance</th>
+    </tr>
+
+    {% for row in data %}
+    <tr>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }}</td>
+        <td>{{ row[4] }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+<br>
+<a href="/" style="display:inline-block;padding:10px 15px;background:#2c3e50;color:#fff;text-decoration:none;border-radius:6px;">← Back Home</a>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reconciliation</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>Reconciliation</h2>
+
+<form method="POST">
+    <input type="date" name="date" required><br>
+    <input type="number" step="0.01" name="expected" placeholder="Expected Total" required><br>
+    <input type="number" step="0.01" name="actual" placeholder="Actual Total" required><br>
+    <button type="submit">Calculate</button>
+</form>
+
+{% if result is not none %}
+    <h3>Variance: {{ result }}</h3>
+
+    {% if result == 0 %}
+        <p class="success">Balanced ✅</p>
+    {% elif result < 0 %}
+        <p class="danger">Shortage ❌</p>
+    {% else %}
+        <p class="warning">Overage ⚠️</p>
+    {% endif %}
+{% endif %}
+
+<br>
+<a href="/" style="display:inline-block;padding:10px 15px;background:#2c3e50;
+            color:#fff;text-decoration:none;border-radius:6px;">← Back Home</a>
+</body>
+</html>

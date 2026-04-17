@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add sales</title>
+</head>
+<body>
+    <link rel="stylesheet" href="/static/style.css">
+
+<div class="sidebar">
+    <h2>DSR System</h2>
+</div>
+
+<div class="main">
+    <div class="header">
+        <h2>Add Sales</h2>
+    </div>
+
+    <div class="form-container">
+        <form method="POST">
+
+            <select name="branch">
+                {% for b in branches %}
+                    <option value="{{ b[0] }}">{{ b[0] }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="date" name="date" required>
+
+            <input type="number" name="cash" placeholder="Cash" required>
+            <input type="number" name="swipe" placeholder="Swipe" required>
+            <input type="number" name="mobile" placeholder="Mobile Money" required>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+<br>
+<a href="/" style="display:inline-block;padding:10px 15px;background:#2c3e50;
+                color:#fff;text-decoration:none;border-radius:6px;">← Back Home</a>
+</body>
+</html>
