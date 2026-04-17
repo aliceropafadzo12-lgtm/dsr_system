@@ -138,6 +138,7 @@ th, td {
 
 tbody tr {
     border-bottom: 1px solid #ddd;
+    border: #16a085;
 }
 
 tbody tr:hover {
