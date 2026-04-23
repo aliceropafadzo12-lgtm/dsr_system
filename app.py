@@ -181,7 +181,8 @@ def reconcile_report():
     return render_template('reconcile_report.html', data=data)
 
 #===== DELETE RECONCILE ENTRY ======
- @app.route('/delete-reconcile/<int:id>')
+
+@app.route('/delete-reconcile/<int:id>')
 def delete_reconcile(id):
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
