@@ -8,10 +8,17 @@
 
 <h2>Reconciliation</h2>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     <input type="date" name="date" required><br>
+
     <input type="number" step="0.01" name="expected" placeholder="Expected Total" required><br>
-    <input type="number" step="0.01" name="actual" placeholder="Actual Total" required><br>
+
+    <!-- NEW: Actual amount -->
+    <input type="number" step="0.01" name="actual_amount" placeholder="Actual Total" required><br>
+
+    <!-- NEW: PDF upload -->
+    <input type="file" name="actual_pdf" accept="application/pdf" required><br>
+
     <button type="submit">Calculate</button>
 </form>
 
@@ -30,5 +37,6 @@
 <br>
 <a href="/" style="display:inline-block;padding:10px 15px;background:#2c3e50;
             color:#fff;text-decoration:none;border-radius:6px;">← Back Home</a>
+
 </body>
 </html>
