@@ -19,6 +19,36 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# ===== PDF EXTRACTION =====
+import re
+import PyPDF2
+
+def extract_grand_total(pdf_path):
+    text = ""
+
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+
+        for page in reader.pages:
+            text += page.extract_text() or ""
+
+    text = text.replace("\n", " ")
+
+    patterns = [
+        r'grand\s*total[:\s]*([\d,]+\.\d{2})',
+        r'net\s*total[:\s]*([\d,]+\.\d{2})',
+        r'\btotal[:\s]*([\d,]+\.\d{2})'
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            amount = match.group(1).replace(",", "")
+            return float(amount)
+
+    return None
+
+
 # ===== LOGIN =====
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -57,6 +87,7 @@ def home():
         return redirect('/login')
     return render_template('index.html')
 
+
 # ===== ADD SALES =====
 @app.route('/add-sales', methods=['GET', 'POST'])
 def add_sales():
@@ -85,6 +116,7 @@ def add_sales():
     conn.close()
 
     return render_template('add_sales.html', branches=branches)
+
 
 # ===== DASHBOARD =====
 @app.route('/dashboard')
@@ -117,6 +149,7 @@ def dashboard():
         branch_data=branch_data
     )
 
+
 # ===== REPORT =====
 @app.route('/report')
 def report():
@@ -130,6 +163,7 @@ def report():
 
     return render_template('report.html', sales=data)
 
+
 # ===== RECONCILE =====
 @app.route('/reconcile', methods=['GET', 'POST'])
 def reconcile():
@@ -138,7 +172,6 @@ def reconcile():
     if request.method == 'POST':
         date = request.form['date']
         expected = float(request.form['expected'])
-        actual_amount = float(request.form['actual_amount'])
 
         file = request.files['actual_pdf']
 
@@ -146,6 +179,12 @@ def reconcile():
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
+
+            # 🔥 Extract total from PDF
+            actual_amount = extract_grand_total(filepath)
+
+            if actual_amount is None:
+                return "Could not find Total in PDF"
         else:
             return "Upload a valid PDF file"
 
@@ -180,20 +219,18 @@ def reconcile_report():
 
     return render_template('reconcile_report.html', data=data)
 
-#===== DELETE RECONCILE ENTRY ======
 
+# ===== DELETE RECONCILE ENTRY =====
 @app.route('/delete-reconcile/<int:id>')
 def delete_reconcile(id):
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    # Get file path
     cursor.execute("SELECT actual FROM reconciliation WHERE id=?", (id,))
     file = cursor.fetchone()
 
     if file:
         filepath = file[0]
-        import os
         if filepath and os.path.exists(filepath):
             os.remove(filepath)
 
