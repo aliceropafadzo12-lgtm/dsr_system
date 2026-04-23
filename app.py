@@ -173,16 +173,29 @@ def reconcile_report():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    # Get file path first (so we can delete the PDF too)
+    cursor.execute("SELECT * FROM reconciliation")
+    data = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('reconcile_report.html', data=data)
+
+#===== DELETE RECONCILE ENTRY ======
+ @app.route('/delete-reconcile/<int:id>')
+def delete_reconcile(id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Get file path
     cursor.execute("SELECT actual FROM reconciliation WHERE id=?", (id,))
     file = cursor.fetchone()
 
     if file:
         filepath = file[0]
+        import os
         if filepath and os.path.exists(filepath):
             os.remove(filepath)
 
-    # Delete record
     cursor.execute("DELETE FROM reconciliation WHERE id=?", (id,))
     conn.commit()
     conn.close()
