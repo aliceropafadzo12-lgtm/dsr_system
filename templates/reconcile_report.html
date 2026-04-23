@@ -14,6 +14,7 @@
         <th>Expected</th>
         <th>Actual (PDF)</th>
         <th>Variance</th>
+        <th>Action</th>
     </tr>
 
     {% for row in data %}
@@ -21,16 +22,22 @@
         <td>{{ row[1] }}</td>
         <td>{{ row[2] }}</td>
 
-        <!-- PDF link -->
         <td>
             <a href="{{ row[3] }}" target="_blank">View PDF</a>
         </td>
 
         <td>{{ row[4] }}</td>
+
+        <td>
+            <a href="/delete-reconcile/{{ row[0] }}"
+               onclick="return confirm('Are you sure you want to delete this record?')"
+               style="color:red; text-decoration:none;">
+               Delete
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
-
 <br>
 <a href="/" style="display:inline-block;padding:10px 15px;background:#2c3e50;
             color:#fff;text-decoration:none;border-radius:6px;">← Back Home</a>

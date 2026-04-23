@@ -173,12 +173,21 @@ def reconcile_report():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM reconciliation")
-    data = cursor.fetchall()
+    # Get file path first (so we can delete the PDF too)
+    cursor.execute("SELECT actual FROM reconciliation WHERE id=?", (id,))
+    file = cursor.fetchone()
 
+    if file:
+        filepath = file[0]
+        if filepath and os.path.exists(filepath):
+            os.remove(filepath)
+
+    # Delete record
+    cursor.execute("DELETE FROM reconciliation WHERE id=?", (id,))
+    conn.commit()
     conn.close()
 
-    return render_template('reconcile_report.html', data=data)
+    return redirect('/reconcile-report')
 
 
 if __name__ == '__main__':
